@@ -39,8 +39,8 @@ class << ActiveRecord::Base
     scope :descendants_of, lambda { |object| where(to_node(object).descendant_conditions) }
     scope :subtree_of, lambda { |object| where(to_node(object).subtree_conditions) }
     scope :siblings_of, lambda { |object| where(to_node(object).sibling_conditions) }
-    scope :ordered_by_ancestry, lambda { select("case when #{table_name}.#{ancestry_column} is null then 0 else 1 end as ancestry_order").order("ancestry_order, #{table_name}.#{ancestry_column}") }
-    scope :ordered_by_ancestry_and, lambda {|order| select("case when #{table_name}.#{ancestry_column} is null then 0 else 1 end as ancestry_order").order("ancestry_order, #{table_name}.#{ancestry_column}, #{order}") }
+    scope :ordered_by_ancestry, lambda { select("#{table_name}.*, case when #{table_name}.#{ancestry_column} is null then 0 else 1 end as ancestry_order").order("ancestry_order, #{table_name}.#{ancestry_column}") }
+    scope :ordered_by_ancestry_and, lambda {|order| select("#{table_name}.*, case when #{table_name}.#{ancestry_column} is null then 0 else 1 end as ancestry_order").order("ancestry_order, #{table_name}.#{ancestry_column}, #{order}") }
     
     # Update descendants with new ancestry before save
     before_save :update_descendants_with_new_ancestry
